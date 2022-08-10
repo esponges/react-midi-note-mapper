@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { Track } from "@tonejs/midi";
 
-import logo from "./logo.svg";
 import "./App.css";
 
 import { midiToBlob } from "./utils/midi";
 
 function App() {
   const audioRef = React.useRef<HTMLAudioElement>(null);
+  const timeRef = React.useRef<number>(0);
+
   const [midi, setMidi] = React.useState<Track>();
   const [note, setNote] = React.useState<string|null>(null);
 
@@ -15,14 +16,20 @@ function App() {
     const getMidi = async () => {
       const song = await midiToBlob("/songs/Beethoven-Moonlight-Sonata.mid");
       setMidi(song);
-      setNote(song.notes[0].name);
     };
     getMidi();
   }, []);
-  
+
+  console.log(midi);
+  const handleMapNote = (note: string) => {
+    setNote(note);
+  }
+
   const handleAudioPlay = () => {
-    if (audioRef.current) {
+    if (audioRef.current && !!midi) {
       audioRef.current.play();
+      // map the very first note in the state
+      setNote(midi.notes[0].name);
     }
   }
 
@@ -34,9 +41,10 @@ function App() {
   }
 
   const handleAudioStop = () => {
-    if (audioRef.current) {
+    if (audioRef.current && !!midi) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+      setNote(null);
     }
   }
 
