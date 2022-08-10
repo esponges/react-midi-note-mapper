@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
+import { Track } from "@tonejs/midi";
+
 import logo from "./logo.svg";
 import "./App.css";
+
 import { midiToBlob } from "./utils/midi";
 
 function App() {
-  const [midi, setMidi] = React.useState<any>();
+  const [midi, setMidi] = React.useState<Track>();
 
   useEffect(() => {
     const getMidi = async () => {
