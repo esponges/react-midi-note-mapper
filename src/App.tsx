@@ -9,17 +9,17 @@ import { midiToBlob } from "./utils/midi";
 function App() {
   const audioRef = React.useRef<HTMLAudioElement>(null);
   const [midi, setMidi] = React.useState<Track>();
+  const [note, setNote] = React.useState<string|null>(null);
 
   useEffect(() => {
     const getMidi = async () => {
       const song = await midiToBlob("/songs/Beethoven-Moonlight-Sonata.mid");
       setMidi(song);
+      setNote(song.notes[0].name);
     };
     getMidi();
   }, []);
-
-  console.log(midi);
-
+  
   const handleAudioPlay = () => {
     if (audioRef.current) {
       audioRef.current.play();
@@ -33,24 +33,24 @@ function App() {
     }
   }
 
+  const handleAudioStop = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <h5>Current Note</h5>
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          {note}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
         <div>
           <button onClick={handleAudioPlay}>Play</button>
           <button onClick={handleAudioReplay}>Replay</button>
+          <button onClick={handleAudioStop}>Stop</button>
         </div>
         <audio ref={audioRef}>
           <source
