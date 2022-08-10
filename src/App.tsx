@@ -7,6 +7,7 @@ import "./App.css";
 import { midiToBlob } from "./utils/midi";
 
 function App() {
+  const audioRef = React.useRef<HTMLAudioElement>(null);
   const [midi, setMidi] = React.useState<Track>();
 
   useEffect(() => {
@@ -18,6 +19,19 @@ function App() {
   }, []);
 
   console.log(midi);
+
+  const handleAudioPlay = () => {
+    if (audioRef.current) {
+      audioRef.current.play();
+    }
+  }
+
+  const handleAudioReplay = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    }
+  }
 
   return (
     <div className="App">
@@ -34,7 +48,11 @@ function App() {
         >
           Learn React
         </a>
-        <audio controls>
+        <div>
+          <button onClick={handleAudioPlay}>Play</button>
+          <button onClick={handleAudioReplay}>Replay</button>
+        </div>
+        <audio ref={audioRef}>
           <source
             src="/songs/Beethoven-Moonlight-Sonata.mp3"
             type="audio/mpeg"
