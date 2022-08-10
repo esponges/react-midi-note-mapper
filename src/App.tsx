@@ -1,8 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { midiToBlob } from "./utils/midi";
 
 function App() {
+  const [midi, setMidi] = React.useState<any>();
+
+  useEffect(() => {
+    const getMidi = async () => {
+      const song = await midiToBlob("/songs/Beethoven-Moonlight-Sonata.mid");
+      setMidi(song);
+    };
+    getMidi();
+  }, []);
+
+  console.log(midi);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +31,12 @@ function App() {
         >
           Learn React
         </a>
+        <audio controls>
+          <source
+            src="/songs/Beethoven-Moonlight-Sonata.mp3"
+            type="audio/mpeg"
+          />
+        </audio>
       </header>
     </div>
   );
